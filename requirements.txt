@@ -30,6 +30,7 @@ azureml==0.2.7
 baidubce==0.8.3
 banana_dev==6.3.0
 BeaEnginePython==3.1.0
+langchain-community~=0.3.25
 BeautifulSoup==3.2.2
 bibtexparser==1.4.3
 bigdl==2.4.0
