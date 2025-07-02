@@ -18,5 +18,5 @@ numpy                   # duckdb/pandas 依赖
 chromadb
 protobuf==3.20.3
 # 解决 Chroma ↔ sqlite3 版本不匹配
-pysqlite3-binary==0.5.2     # 自带 SQLite 3.45
+pysqlite3-binary==0.5.4     # 自带 SQLite 3.45
 chromadb>=0.5.0             # 继续使用你当前的 Chroma
