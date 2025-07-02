@@ -5,7 +5,7 @@ from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_openai.chat_models.base import BaseChatOpenAI
 from langchain.docstore.document import Document
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma 
 from langchain.embeddings.base import Embeddings
 from typing import List
 import numpy as np
@@ -41,7 +41,7 @@ def build_vector_store(
         docs_clean: List[dict],
         provider: str,
         api_key: str
-) -> FAISS:
+) -> Chroma:
     """
     docs_clean 每条至少含 "content"
     """
@@ -51,12 +51,11 @@ def build_vector_store(
         Document(page_content=_normalise(d["content"]), metadata=d)
         for d in docs_clean
     ]
-    return FAISS.from_documents(documents, embed_model)
-
+    return Chroma.from_documents(documents, embed_model) 
 
 # -------- 对外 2：相似度检索 ----------
 def top_k_context(
-        vec_store: FAISS,
+        vec_store: Chroma,  
         query: str,
         k: int = 3
 ) -> List[str]:
