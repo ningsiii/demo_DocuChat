@@ -4,7 +4,7 @@ from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_community.chat_models import ChatTongyi
 from langchain_openai.chat_models.base import BaseChatOpenAI
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
@@ -51,7 +51,11 @@ def qa_agent(provider, api_key, contexts, question, memory=None):
     else:
         raise ValueError(f"不支持的嵌入提供商: {provider}")
         # ———— 4. 构建向量库 & Retriever ————
-    vectorstore = FAISS.from_documents(documents, embeddings)
+    vectorstore = Chroma.from_documents(                    
+        documents,
+        embeddings,
+        persist_directory=None      
+    )
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
     # ———— 5. 选择 LLM 模型 ————
