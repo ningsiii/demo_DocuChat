@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma   
 #导入嵌入模型
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.embeddings import DashScopeEmbeddings
@@ -43,11 +43,14 @@ def ingest_pdf(
     else:
         raise ValueError(f"不支持的嵌入提供商: {provider}")
     # 4. 建索引 & 保存
-    db=FAISS.from_documents(texts,embeddings)
-    db.save_local(index_path)
+    db = Chroma.from_documents(                      
+        texts,
+        embeddings,
+        persist_directory=index_path                 
+    )
+    db.persist()                                     
+
     return [d.page_content for d in texts]
-
-
 
 
 
