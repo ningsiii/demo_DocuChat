@@ -1,0 +1,17 @@
+# --- 核心 ---
+streamlit
+
+# --- LangChain 生态（版本必须对齐） ---
+langchain==0.3.24
+langchain-community==0.3.24
+langchain-openai==0.1.25
+openai>=1.14.3          # deepseek 也走 openai接口
+
+# --- 通义千问 SDK（纯Python，可装过） ---
+dashscope>=1.23.6
+
+# --- 解析 & 本地纯 Python 向量库 ---
+pypdf
+duckdb                 # 用 Chroma，免 faiss-cpu 轮子
+
+numpy                   # duckdb/pandas 依赖
