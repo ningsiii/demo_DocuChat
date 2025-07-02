@@ -2,9 +2,9 @@
 streamlit
 
 # --- LangChain 生态（版本必须对齐） ---
-langchain==0.3.24
-langchain-community==0.3.24
-langchain-openai==0.1.25
+langchain
+langchain-community
+langchain-openai
 openai>=1.14.3          # deepseek 也走 openai接口
 
 # --- 通义千问 SDK（纯Python，可装过） ---
