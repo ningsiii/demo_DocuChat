@@ -62,6 +62,13 @@ st.sidebar.markdown(
 with st.expander("# 请上传需要读取的文档，文档语言不限",expanded=True):
     col_input,col_upload=st.columns([3,1])
     uploaded_file = st.file_uploader("上传 PDF", type="pdf", key="upload")
+    # -------- 大小限制开始 --------
+    MAX_SIZE = 5 * 1024 * 1024  # 5 MB
+    if uploaded_file and uploaded_file.size > MAX_SIZE:
+        st.error(f"❌ 文件过大（{uploaded_file.size/1024/1024:.1f} MB），"
+             "请上传不超过 5 MB 的 PDF。")
+        st.stop()
+# -------- 大小限制结束 --------
     prepare=st.button("准备数据")
     if prepare is True:
         if not uploaded_file:
