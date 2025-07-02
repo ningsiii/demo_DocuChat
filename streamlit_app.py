@@ -1,10 +1,10 @@
 import streamlit as st
-from demos.ai_hub.ingest    import ingest_pdf
-from demos.ai_hub.summary import build_summary_chain, human_messages
-from demos.ai_hub.chat  import qa_agent
+from docu_demo_clean.ai_hub.ingest    import ingest_pdf
+from docu_demo_clean.ai_hub.summary import build_summary_chain, human_messages
+from docu_demo_clean.ai_hub.chat  import qa_agent
 from langchain.chains import LLMChain
-from demos.ai_hub.text_utils import postprocess_docs
-from demos.ai_hub.vector_store import build_vector_store, top_k_context
+from docu_demo_clean.ai_hub.text_utils import postprocess_docs
+from docu_demo_clean.ai_hub.vector_store import build_vector_store, top_k_context
 from langchain.memory import ConversationBufferMemory
 from langchain.schema import HumanMessage, AIMessage
 
