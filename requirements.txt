@@ -1,19 +1,18 @@
-# requirements.txt   ← 只保留下面这些行，别再加其它奇怪包
+# --- UI & 基础 ---
 streamlit
 
-# LangChain 三件套（必须）
-langchain~=0.3.25
-langchain-community~=0.3.25
-langchain-openai~=0.1.5      # 既给 OpenAI 也给 DeepSeek 用
+# --- LangChain 生态（版本对齐到 0.3.26 / 0.1.25） ---
+langchain==0.3.26
+langchain-community==0.3.26
+langchain-openai==0.1.25
+openai>=1.14.3           # langchain-openai底层依赖
 
-# 通义千问 SDK
-dashscope~=1.10.0             # 若 1.10.0 构建失败，可换 1.9.0 或干脆先注释
+# --- 通义千问 SDK ---
+dashscope>=1.23.6
 
-# 解析 PDF
+# --- PDF & 轻量向量库 ---
 pypdf
+duckdb
 
-# 轻量向量库（替代 faiss-cpu，100% 纯 Python）
-duckdb                        
+numpy                     # duckdb / pandas 用到
 
-# 常用数值库
-numpy
