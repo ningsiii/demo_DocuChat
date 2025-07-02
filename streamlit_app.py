@@ -2,7 +2,7 @@ import importlib, sys
 sys.modules["sqlite3"] = importlib.import_module("pysqlite3")
 import streamlit as st
 from ai_hub.ingest    import ingest_pdf
-from ai_hub.summary import build_summary_chain, human_messages
+from ai_hub.summary import run_summary   
 from ai_hub.chat  import qa_agent
 from langchain.chains import LLMChain
 from ai_hub.text_utils import postprocess_docs
@@ -51,7 +51,7 @@ st.sidebar.markdown(
     - **上传 PDF**，一键提取关键信息并生成中文摘要（支持外文文档）  
     - **检索增强对话**，用中文与文档内容自由交流（支持历史消息查看）
 
-    技术栈：FAISS 向量检索 • LangChain RAG • 大模型集成 • Streamlit 快速部署  
+    技术栈：Chroma(Vector DB) • LangChain RAG • 大模型集成 • Streamlit 快速部署  
     """
 )
 "## 向量检索+LLM：智能摘要与对话问答"
@@ -111,9 +111,13 @@ with tab1:
     )
     if st.button("生成智能摘要"):
         with st.spinner("数据读取中，请稍等……"):
-            chain=build_summary_chain(provider,api_key)
-            full_text="\n\n".join([d["content"]for d in docs])
-            summary=chain.run(num_points=num_points,context=full_text)
+            full_text = "\n\n".join([d["content"] for d in docs])
+            summary   = run_summary(
+                provider   = provider,
+                api_key    = api_key,
+                context    = full_text,
+                num_points = num_points      # 来自滑块
+        )
             st.markdown(summary)
             st.session_state["summary"]=summary
     if "summary" in st.session_state:
