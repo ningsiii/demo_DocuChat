@@ -15,3 +15,4 @@ pypdf
 duckdb                 # 用 Chroma，免 faiss-cpu 轮子
 
 numpy                   # duckdb/pandas 依赖
+chromadb
