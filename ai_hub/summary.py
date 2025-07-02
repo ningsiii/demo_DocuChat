@@ -8,6 +8,9 @@ from langchain_community.chat_models import ChatTongyi
 from langchain_openai.chat_models.base import BaseChatOpenAI
 from langchain.prompts import(ChatPromptTemplate,SystemMessagePromptTemplate,HumanMessagePromptTemplate)
 
+import re
+from typing import Callable
+
 #-------统一拿到chatllm---------
 def get_llm(provider,api_key):
    if provider =="openai":
@@ -54,4 +57,47 @@ messages=summary_prompt.format_messages(
 def build_summary_chain(provider,api_key)->LLMChain:
     llm=get_llm(provider,api_key)
     return LLMChain(llm=llm,prompt=summary_prompt,output_key="summary")
+# === 新增 1：结果校验函数 =================================
+
+def _enforce_n_points(text: str, n: int, retry_fn: Callable[[], str] | None = None) -> str:
+    """
+    确保返回恰好 n 条 '- ' 开头的要点。
+    - 若要点数量 > {{ num_points }}，请将最相近的两条合并为一句，直到仅剩 {{ num_points }} 条。
+
+    - 若要点数量 < {{ num_points }}：可选重试一次；仍不足就合并两次结果后截断。
+    """
+    def _extract(s: str) -> list[str]:
+        return [ln.strip() for ln in s.splitlines() if re.match(r"^- ?", ln.strip())]
+
+    pts = _extract(text)
+    if len(pts) > n:                     # 太多 → 截断
+        return "\n".join(pts[:n])
+
+    if len(pts) < n and retry_fn:        # 太少 → 重试一次
+        sec = _extract(retry_fn())
+        merged = list(dict.fromkeys(pts + sec))  # 去重
+        return "\n".join(merged[:n])
+
+    return "\n".join(pts)                # 正好
+
+
+# === 新增 2：对外一步调用 =================================
+def run_summary(
+    provider: str,
+    api_key: str,
+    context: str,
+    num_points: int = 5,
+) -> str:
+    """
+    直接返回“恰好 num_points 条”中文要点列表
+    """
+    chain = build_summary_chain(provider, api_key)
+
+    # 第一次生成
+    raw = chain.run(num_points=num_points, context=context)
+
+    # 定义“再跑一次”的 lambda；若不想重试可改为 None
+    retry = lambda: chain.run(num_points=num_points, context=context)
+
+    return _enforce_n_points(raw, num_points, retry)
 
