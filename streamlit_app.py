@@ -1,3 +1,5 @@
+import importlib, sys
+sys.modules["sqlite3"] = importlib.import_module("pysqlite3")
 import streamlit as st
 from ai_hub.ingest    import ingest_pdf
 from ai_hub.summary import build_summary_chain, human_messages
